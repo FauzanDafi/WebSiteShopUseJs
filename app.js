@@ -8,14 +8,12 @@ const cart = document.querySelector(".cart");
 
 openCart.addEventListener("click", () => {
   cart.classList.toggle("active");
-  console.log("sukses");
 });
 
 closeCart.addEventListener("click", () => {
   cart.classList.remove("active");
+  updateCarts();
 });
-
-let itemCarts = [];
 
 let products = [
   {
@@ -55,6 +53,7 @@ let products = [
     name: "produk 6",
   },
 ];
+let itemCarts = [];
 
 const initApp = () => {
   products.forEach((value, key) => {
@@ -67,7 +66,6 @@ const initApp = () => {
         <button onclick="addToCart(${key})">buy</button>
         `;
     boxItems.appendChild(newDiv);
-    products.push(itemCarts);
   });
 };
 
@@ -78,6 +76,8 @@ const addToCart = (key) => {
     itemCarts[key] = JSON.parse(JSON.stringify(products[key]));
     itemCarts[key].quantity = 1;
   }
+
+  console.log(itemCarts);
   reloadCart();
 };
 
@@ -85,10 +85,12 @@ const reloadCart = () => {
   listCart.innerHTML = "";
   let count = 0;
   let price = 0;
+  let counts = 0;
 
   itemCarts.forEach((value, key) => {
     price = price + value.price;
-    count = count + value.quantity;
+    count = value.quantity;
+    counts = counts + value.quantity;
 
     if (value != null) {
       let li = document.createElement("li");
@@ -98,11 +100,11 @@ const reloadCart = () => {
       <div class='cartPrice'>${value.price}</div>
 
 <div class="quantity-box">
-<button class="buttonCart" onclick="changeQuantity(${key}.${
+<button class="buttonCart" onclick="changeQuantity(${key},${
         value.quantity - 1
       })">-</button>
 <div>${count}</div>
-<button class="buttonCart" onclick="changeQuantity(${key}.${
+<button class="buttonCart" onclick="changeQuantity(${key},${
         value.quantity + 1
       })">+</button>
 </div>
@@ -111,17 +113,26 @@ const reloadCart = () => {
       listCart.appendChild(li);
 
       total.innerText = price;
-      totalDefault.innerText = count;
+      totalDefault.innerText = counts;
+      console.log(value.quantity);
     }
   });
 };
 
-const changeQuantity = (key, value) => {
-  if (value.quantity == 0) {
-    delete listCart[key];
+const changeQuantity = (key, quantity) => {
+  if (itemCarts[key].quantity == 0) {
+    delete itemCarts[key];
+    total.innerHTML = 0;
   } else {
-    listCart[key].quantity = value.quantity;
-    listCart[key].price = value.quantity * products[key].price;
+    itemCarts[key].quantity = quantity;
+    itemCarts[key].price = quantity * products[key].price;
   }
   reloadCart();
+};
+
+const updateCarts = (key) => {
+  listCart.innerHTML = "";
+  totalDefault.innerHTML = 0;
+  total.innerHTML = 0;
+  delete itemCarts[key];
 };

@@ -116,7 +116,6 @@ main .box-items {
 .cart .cart-items {
   margin: 10px 0;
   list-style: none;
-  border: 2px solid red;
 }
 
 .cart-items li {
@@ -131,7 +130,6 @@ main .box-items {
 }
 
 .cart-items li .quantity-box {
-  border: 2px solid red;
   display: flex;
   align-items: center;
   justify-content: center;
